@@ -25,7 +25,7 @@ using namespace std;
 // --------------------------------------------------------------------------------
 
 // Default Constructor
-WarpImage::WarpImage(QWidget *parent) : QWidget(parent)
+WarpImage::WarpImage(QObject *parent) : QObject(parent)
 {
    // ------ Timer ------------------------------------
 
@@ -47,7 +47,7 @@ WarpImage::WarpImage(QWidget *parent) : QWidget(parent)
    // ------ Image ------------------------------------
 
    // Size
-   resize(QSize(500,250));
+   //resize(QSize(500,250));
 
    // pull image
    image = new QImage(QString("C:\\Users\\Aidan\\Desktop\\krug.jpg"));
@@ -76,7 +76,7 @@ void WarpImage::update()
    //increment_color();
 
    // modify pixmap with painter
-   effect_tunnel(abs(qSin(time.elapsed()/500.0)*80));
+   effect_tunnel(abs(qSin(time.elapsed()/2000.0)*80));
 
    // update pixmap and label
    //piximage->convertFromImage(*image);

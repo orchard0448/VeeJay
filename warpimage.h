@@ -9,8 +9,7 @@
 #ifndef WARPIMAGE_H
 #define WARPIMAGE_H
 
-#include <QWidget>
-#include <QLabel>
+#include <QObject>
 #include <QPainter>
 #include <QTimer>
 #include <QTime>
@@ -26,13 +25,12 @@
 // ----------File IO Functions-----------------------
 // --------------------------------------------------------------
 
-class WarpImage: public QWidget
+class WarpImage: public QObject
 {
    Q_OBJECT
 
 private:
    // image
-   QLabel      *labelimage;
    QPixmap     *piximage;
    QImage      *image;
 
@@ -46,7 +44,7 @@ private:
 public:
 
    // Default Constructor
-   WarpImage(QWidget *parent = nullptr);
+   WarpImage(QObject *parent = nullptr);
 
    // increment color
    void increment_color(int increment);
