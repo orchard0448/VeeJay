@@ -16,8 +16,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp \
     controlpanel.cpp \
-    warpimage.cpp
+    warpimage.cpp \
+    finalgraphic.cpp
 
 HEADERS += \
     controlpanel.h \
-    warpimage.h
+    warpimage.h \
+    finalgraphic.h
