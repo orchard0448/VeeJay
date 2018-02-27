@@ -14,6 +14,8 @@
 #include <QTimer>
 #include <QTime>
 
+class QPixmap;
+
 // --------------------------------------------------------------
 // ControlPanel Class Declaration
 // --------------------------------------------------------------
@@ -38,7 +40,7 @@ private:
    QPainter    *painter;
 
    // timer & time
-   QTimer      *timer;
+   QTimer      *image_update_timer;
    QTime       time;
 
 public:
@@ -46,11 +48,14 @@ public:
    // Default Constructor
    WarpImage(QObject *parent = nullptr);
 
-   // increment color
-   void increment_color(int increment);
-
    // tunnel effect
    void effect_tunnel(int value);
+
+   // get_pixmap
+   QPixmap* get_pixmap();
+
+   // increment color
+   void increment_color(int increment);
 
    // test paint
    void test_paint(int value);

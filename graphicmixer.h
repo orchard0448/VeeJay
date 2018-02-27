@@ -14,6 +14,13 @@
 // include QObject
 #include <QObject>
 
+// include other classes
+#include <vector>
+
+// predeclare classes
+class QTimer;
+class QPainter;
+
 // --------------------------------------------------------------
 // FinalGraphic Class Declaration
 // --------------------------------------------------------------
@@ -35,8 +42,30 @@
 class GraphicMixer : public QObject
 {
    Q_OBJECT
+
+private:
+
+   // Size
+   int   height   = 500;
+   int   width    = 1000;
+
+   // internal update timer
+   QTimer            *remix_timer;
+
+   // pixmap for channel combination
+   QPixmap           *mixed_pixmap;
+   QPainter          *mix_painter;
+
+   // list of pixmaps being mixed
+   std::vector<QPixmap*>  channel_pixmaps;
+
 public:
+
+   // Default Constructor
    explicit GraphicMixer(QObject *parent = nullptr);
+
+   // add_channel
+   void add_channel(QPixmap *new_channel_pixmap);
 
    // ----------Signals--------------------------------
 
@@ -47,8 +76,8 @@ signals:
 
 public slots:
 
-   // update_channel
-   void update_channel(QPixmap *pixmap);
+   // remix
+   void remix();
 };
 
 #endif // GRAPHICMIXER_H

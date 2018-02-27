@@ -29,16 +29,14 @@ WarpImage::WarpImage(QObject *parent) : QObject(parent)
 {
    // ------ Timer ------------------------------------
 
-   // Initialize Timer
-   timer = new QTimer(this);
+   // Image Update Timer
+   image_update_timer = new QTimer(this);
 
    // connect timer to update
-   QObject::connect(timer, QTimer::timeout, this, WarpImage::update);
-
-   //QObject::connect(&controls, &ControlPanel::slider1Changed, &main_image, WarpImage::test_slot);
+   QObject::connect(image_update_timer, QTimer::timeout, this, WarpImage::update);
 
    // start timer
-   timer->start(1);
+   image_update_timer->start(1);
 
    // start time
    time.start();
@@ -87,16 +85,6 @@ void WarpImage::update()
 
 }
 
-// test_paint
-void WarpImage::test_paint(int value)
-{
-   painter = new QPainter();
-
-   painter->begin(piximage);
-   painter->drawEllipse(0,0,10*value,100);
-   painter->end();
-}
-
 // effect_tunnel
 void WarpImage::effect_tunnel(int increment)
 {
@@ -126,6 +114,21 @@ void WarpImage::effect_tunnel(int increment)
    painter->end();
 
 }
+
+// get_pixmap
+QPixmap* WarpImage::get_pixmap()
+{
+   return piximage;
+}
+
+
+
+
+
+
+
+
+
 
 // increment color
 void WarpImage::increment_color(int increment)
@@ -174,13 +177,15 @@ void WarpImage::increment_color(int increment)
    }
 }
 
+// test_paint
+void WarpImage::test_paint(int value)
+{
+   painter = new QPainter();
 
-
-
-
-
-
-
+   painter->begin(piximage);
+   painter->drawEllipse(0,0,10*value,100);
+   painter->end();
+}
 
 
 

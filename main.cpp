@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
    QApplication a(argc, argv);
 
    // Create WarpImage
-   WarpImage main_image;
+   WarpImage warp1, warp2;
 
    // Create FinalGaphic
    FinalGraphic final;
@@ -21,8 +21,12 @@ int main(int argc, char *argv[])
    // Create Graphic Mixer
    GraphicMixer mixer;
 
+   // add warp1's pixmap to mixer
+   mixer.add_channel(warp1.get_pixmap());
+   mixer.add_channel(warp2.get_pixmap());
+
    // connect warpimage to graphic mixer
-   QObject::connect(&main_image, WarpImage::graphic_changed, &mixer, GraphicMixer::update_channel);
+   //QObject::connect(&warp1, WarpImage::graphic_changed, &mixer, GraphicMixer::update_channel);
 
    // Connect graphic mixer to final image
    QObject::connect(&mixer, GraphicMixer::update_finalgraphic, &final, FinalGraphic::update);
