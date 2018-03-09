@@ -18,10 +18,10 @@ SOURCES += main.cpp \
     controlpanel.cpp \
     warpimage.cpp \
     finalgraphic.cpp \
-    graphicmixer.cpp
+    graphicmixer.cpp \
 
 HEADERS += \
     controlpanel.h \
     warpimage.h \
     finalgraphic.h \
-    graphicmixer.h
+    graphicmixer.h \

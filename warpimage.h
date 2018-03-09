@@ -32,33 +32,53 @@ class WarpImage: public QObject
    Q_OBJECT
 
 private:
+
+   // Size
+   int   height   = 500;
+   int   width    = 1000;
+
+   // max warp width and height
+   double   max_relative_width    = 0.9;
+   double   max_relative_height   = 0.8;
+
+   // image path
+   QString     base_image_path   = QString("C:\\Users\\Aidan\\Desktop\\krug.jpg");
+
    // image
    QPixmap     *piximage;
-   QImage      *image;
 
    // paint device
    QPainter    *painter;
 
    // timer & time
    QTimer      *image_update_timer;
-   QTime       time;
+   QTime       *warp_time;
 
 public:
+
+   // ----------Constructors------------------------------
 
    // Default Constructor
    WarpImage(QObject *parent = nullptr);
 
-   // tunnel effect
-   void effect_tunnel(int value);
+   // ----------Accessors--------------------------------
 
    // get_pixmap
    QPixmap* get_pixmap();
 
-   // increment color
-   void increment_color(int increment);
+   // ----------Mutators--------------------------------
 
-   // test paint
-   void test_paint(int value);
+   // set_max_rel_width
+   void set_max_rel_width(double m_rel_w);
+
+   // set_max_rel_height
+   void set_max_rel_height(double m_rel_h);
+
+   // set_qtime
+   void set_qtime(QTime *time);
+
+   // tunnel effect
+   void effect_tunnel(double value);
 
    // ----------Signals--------------------------------
 
@@ -71,8 +91,8 @@ signals:
 
 public slots:
 
-   // test slot
-   void update();
+   // update_image
+   void update_image();
 };
 
 #endif // WARPIMAGE_H
@@ -81,6 +101,45 @@ public slots:
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
 
 
 

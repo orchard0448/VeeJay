@@ -42,36 +42,31 @@ GraphicMixer::GraphicMixer(QObject *parent) : QObject(parent)
    // ------ Graphic ------------------------------------
 
    // initialize pixmap
-   mixed_pixmap = new QPixmap();
-
-   // initialize painter for image composition
-   //mix_painter    = new QPainter(mixed_pixmap);
-
-   // pull image
-   QImage image(QString("C:\\Users\\Aidan\\Desktop\\krug.jpg"));
-
-   // scale image
-   image = image.scaledToWidth(width);
-
-   // convert ot piximap
-   mixed_pixmap->convertFromImage(image);
-   *mixed_pixmap   = mixed_pixmap->copy(QRect(0,0,width,height));
+   mixed_pixmap = new QPixmap(QSize(width, height));
 
 }
 
 // ------------------------------------------------------------------
-//   ##    ####   ####  ######  ####   ####   ####  #####   ####
-//  #  #  #    # #    # #      #      #      #    # #    # #
-// #    # #      #      #####   ####   ####  #    # #    #  ####
-// ###### #      #      #           #      # #    # #####       #
-// #    # #    # #    # #      #    # #    # #    # #   #  #    #
-// #    #  ####   ####  ######  ####   ####   ####  #    #  ####
+//  #    # #    # #####   ##   #####  ####  #####   ####
+//  ##  ## #    #   #    #  #    #   #    # #    # #
+//  # ## # #    #   #   #    #   #   #    # #    #  ####
+//  #    # #    #   #   ######   #   #    # #####       #
+//  #    # #    #   #   #    #   #   #    # #   #  #    #
+//  #    #  ####    #   #    #   #    ####  #    #  ####
 // ------------------------------------------------------------------
 
 // add_channel
-void GraphicMixer::add_channel(QPixmap *new_channel_pixmap)
+void GraphicMixer::add_channel(QPixmap *new_channel_pixmap, QPainter::CompositionMode mode)
 {
+   // this function adds a channel to the mixer
+   //    inputs:  reference to the pixmap for the channel
+   //             composition mode for the channel
+
+   // chanel pixmap
    channel_pixmaps.push_back(new_channel_pixmap);
+
+   // composition mode
+   comp_modes.push_back(mode);
 }
 
 // ---------------------------------------------------------------------
@@ -86,30 +81,33 @@ void GraphicMixer::add_channel(QPixmap *new_channel_pixmap)
 // remix
 void GraphicMixer::remix()
 {
+   // this function recomposes the mix product and emits an update signal
+   //
+   // mixing the composition entails creating a background and adding
+   // each channel with the specified composition mode
+
    // begin painting
    mix_painter = new QPainter();
 
    mix_painter->begin(mixed_pixmap);
 
    // add white
-   mix_painter->fillRect(0,0,width,height,Qt::GlobalColor::white);
+   mix_painter->fillRect(0,0,width, height, background_color);
 
-   // add channel 0
-   mix_painter->drawPixmap(0,0,width,height, *channel_pixmaps[0]);
+   // loop through each channel
+   for(int ci = 0; ci < channel_pixmaps.size(); ci++)
+   {
+      // change composition mode
+      mix_painter->setCompositionMode(comp_modes[ci]);
 
-   // change composition mode
-   mix_painter->setCompositionMode(QPainter::CompositionMode_Difference);
-
-   // add channel 1
-   mix_painter->drawPixmap(0,0,width,height, *channel_pixmaps[1]);
-
-   // simply set equal for now
-   //*mixed_pixmap   = *channel_pixmaps[0];
+      // add channel 0
+      mix_painter->drawPixmap(0,0,width,height, *channel_pixmaps[ci]);
+   }
 
    mix_painter->end();
 
    // emit signal to final graphic
-   update_finalgraphic(mixed_pixmap);
+   graphic_remixed(mixed_pixmap);
 }
 
 

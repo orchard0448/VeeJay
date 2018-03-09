@@ -17,9 +17,9 @@
 // include other classes
 #include <vector>
 
-// predeclare classes
+// predeclare classes and include Qt classes
+#include <QPainter>
 class QTimer;
-class QPainter;
 
 // --------------------------------------------------------------
 // FinalGraphic Class Declaration
@@ -49,6 +49,9 @@ private:
    int   height   = 500;
    int   width    = 1000;
 
+   // background color
+   QColor            background_color = Qt::GlobalColor::white;
+
    // internal update timer
    QTimer            *remix_timer;
 
@@ -57,22 +60,29 @@ private:
    QPainter          *mix_painter;
 
    // list of pixmaps being mixed
-   std::vector<QPixmap*>  channel_pixmaps;
+   std::vector<QPixmap*>                     channel_pixmaps;
+   std::vector<QPainter::CompositionMode>    comp_modes;
 
 public:
+
+   // ----------Constructors------------------------------
 
    // Default Constructor
    explicit GraphicMixer(QObject *parent = nullptr);
 
+   // ----------Mutators--------------------------------
+
    // add_channel
-   void add_channel(QPixmap *new_channel_pixmap);
+   void add_channel(QPixmap *new_channel_pixmap, QPainter::CompositionMode mode);
 
    // ----------Signals--------------------------------
 
 signals:
 
-   // graphic_changed
-   void update_finalgraphic(QPixmap *pixmap);
+   // graphic_remixed
+   void graphic_remixed(QPixmap *pixmap);
+
+   // ----------Slots----------------------------------
 
 public slots:
 
