@@ -85,6 +85,12 @@ QPixmap* WarpImage::get_pixmap()
 //  #    #  ####    #   #    #   #    ####  #    #  ####
 // ------------------------------------------------------------------
 
+// set_warp_scalar
+void WarpImage::set_warp_scalar(AbstractFunction *abstract_function)
+{
+   warp_scalar = abstract_function;
+}
+
 // set_max_rel_width
 void WarpImage::set_max_rel_width(double m_rel_w)
 {
@@ -139,8 +145,6 @@ void WarpImage::update_image()
    // modify pixmap with painter
    //effect_tunnel(abs(qSin(warp_time->elapsed()/4000.0)));
    effect_tunnel(warp_scalar->f());
-
-   cout<<warp_scalar->f()<<endl;
 
    // emit signal
    emit graphic_changed(piximage);

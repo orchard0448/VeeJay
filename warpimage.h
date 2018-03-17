@@ -79,6 +79,9 @@ public:
 
    // ----------Mutators--------------------------------
 
+   // set_warp_scalar
+   void set_warp_scalar(AbstractFunction *abstract_function);
+
    // set_max_rel_width
    void set_max_rel_width(double m_rel_w);
 
