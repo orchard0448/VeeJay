@@ -13,6 +13,8 @@
 #include <QTimer>
 #include <QTime>
 
+#include <abstractfunction.h>
+
 class QPixmap;
 
 // --------------------------------------------------------------
@@ -57,10 +59,11 @@ private:
    // paint device
    QPainter    *painter;
 
-   // timer & time
+   // update timer
    QTimer      *image_update_timer;
 
-   QTime       *warp_time;
+   // warp_scalar
+   AbstractFunction  *warp_scalar;
 
 public:
 
@@ -82,9 +85,6 @@ public:
    // set_max_rel_height
    void set_max_rel_height(double m_rel_h);
 
-   // set_qtime
-   void set_qtime(QTime *time);
-
    // tunnel effect
    void effect_tunnel(double value);
 
@@ -100,7 +100,7 @@ signals:
 public slots:
 
    // update_image
-   void update_image(double value);
+   void update_image();
 };
 
 #endif // WARPIMAGE_H

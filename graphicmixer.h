@@ -5,7 +5,7 @@
 // composition
 //
 // --------------------------------------------------------------------------------
-//    Aidan Orchard 02/25/2018
+//    Aidan Orchard
 // --------------------------------------------------------------------------------
 
 #ifndef GRAPHICMIXER_H
@@ -25,18 +25,16 @@ class QTimer;
 // FinalGraphic Class Declaration
 // --------------------------------------------------------------
 //
-// ----------Constructors--------------------------
-// Default Constructor (with QObject parent)
-// ----------Accessor Functions---------------------
-// none
-// ----------Mutator Functions----------------------
-// none
-// ----------File IO Functions----------------------
-// none
+// ----------Constructors------------------------------
+// Default Constructor
+// ----------Mutators--------------------------------
+// add_channel
+// paint_alpha_gain_map
+// paint_alpha_on_channel
 // ----------Signals--------------------------------
-// update_finalgraphic
+// graphic_remixed
 // ----------Slots----------------------------------
-// update_channel
+// remix
 // --------------------------------------------------------------
 
 class GraphicMixer : public QObject
@@ -57,10 +55,16 @@ private:
 
    // pixmap for channel combination
    QPixmap           *mixed_pixmap;
-   QPainter          *mix_painter;
 
-   // list of pixmaps being mixed
-   std::vector<QPixmap*>                     channel_pixmaps;
+   // painters
+   QPainter          *mix_painter;
+   QPainter          *alpha_painter;
+
+   // channel data
+   std::vector<QPixmap*>                     channel_pixmap_originals;
+   std::vector<QPixmap*>                     channel_pixmap_postalpha;
+   std::vector<QPixmap*>                     channel_alpha_gain_maps;
+   std::vector<int>                          channel_alpha;
    std::vector<QPainter::CompositionMode>    comp_modes;
 
 public:
@@ -73,7 +77,14 @@ public:
    // ----------Mutators--------------------------------
 
    // add_channel
-   void add_channel(QPixmap *new_channel_pixmap, QPainter::CompositionMode mode);
+   void add_channel(QPixmap *new_channel_pixmap, const QPainter::CompositionMode &mode, const int &alpha_gain);
+
+   // paint_alpha_gain_map
+   void paint_alpha_gain_map(const int &channel_num);
+
+   // paint_alpha_on_channel
+   void paint_alpha_on_channel(const int &channel_num);
+
 
    // ----------Signals--------------------------------
 

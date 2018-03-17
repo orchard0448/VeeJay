@@ -19,9 +19,13 @@ SOURCES += main.cpp \
     warpimage.cpp \
     finalgraphic.cpp \
     graphicmixer.cpp \
+    abstractfunction.cpp \
+    functiontimesin.cpp
 
 HEADERS += \
     controlpanel.h \
     warpimage.h \
     finalgraphic.h \
     graphicmixer.h \
+    abstractfunction.h \
+    functiontimesin.h

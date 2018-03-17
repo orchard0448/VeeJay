@@ -11,6 +11,10 @@
 // Class Header
 #include "warpimage.h"
 
+// supported libs
+#include "functiontimesin.h"
+
+// std
 #include <iostream>
 using namespace std;
 
@@ -37,9 +41,10 @@ WarpImage::WarpImage(QObject *parent) : QObject(parent)
    // start timer
    image_update_timer->start(1);
 
-   // start warp_time
-   warp_time   = new QTime();
-   warp_time->start();
+   // ------ Warp Scalar ------------------------------
+
+   // default: sin function
+   warp_scalar = new FunctionTimeSin();
 
    // ------ Graphic ------------------------------------
 
@@ -92,12 +97,6 @@ void WarpImage::set_max_rel_height(double m_rel_h)
    max_relative_height   = m_rel_h;
 }
 
-// set_qtime
-void WarpImage::set_qtime(QTime *time)
-{
-   warp_time   = time;
-}
-
 // effect_tunnel
 void WarpImage::effect_tunnel(double increment)
 {
@@ -134,12 +133,14 @@ void WarpImage::effect_tunnel(double increment)
 // ---------------------------------------------------------------------
 
 // update_image
-void WarpImage::update_image(double value)
+void WarpImage::update_image()
 {
 
    // modify pixmap with painter
    //effect_tunnel(abs(qSin(warp_time->elapsed()/4000.0)));
-   effect_tunnel(value);
+   effect_tunnel(warp_scalar->f());
+
+   cout<<warp_scalar->f()<<endl;
 
    // emit signal
    emit graphic_changed(piximage);

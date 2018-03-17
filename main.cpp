@@ -14,21 +14,6 @@ int main(int argc, char *argv[])
    // Create WarpImage
    WarpImage warp1, warp2, warp3;
 
-   // create two timers
-   QTime   time1, time2, time3;
-   time1.start();
-   time2.start();
-   time3.start();
-
-   // offset timers
-   time2 = time2.addMSecs(10000);
-   time3 = time3.addMSecs(20000);
-
-   // plug in timers
-   warp1.set_qtime(&time1);
-   warp2.set_qtime(&time2);
-   warp3.set_qtime(&time3);
-
    // adjust max width and height of warp2
    warp1.set_max_rel_height(-0.2);
    warp1.set_max_rel_width(0.9);
