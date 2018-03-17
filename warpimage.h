@@ -2,8 +2,7 @@
 // WarpImage
 //
 // --------------------------------------------------------------------------------
-//    Aidan Orchard 02/02/2018
-// initial commit.
+//    Aidan Orchard
 // --------------------------------------------------------------------------------
 
 #ifndef WARPIMAGE_H
@@ -20,11 +19,19 @@ class QPixmap;
 // ControlPanel Class Declaration
 // --------------------------------------------------------------
 // functions:
-// ----------Constructors---------------------
+// ----------Constructors------------------------------
 // Default Constructor
-// ----------Accessor Functions---------------------
-// ----------Mutator Functions----------------------
-// ----------File IO Functions-----------------------
+// ----------Accessors--------------------------------
+// get_pixmap
+// ----------Mutators--------------------------------
+// set_max_rel_width
+// set_max_rel_height
+// set_qtime
+// tunnel effect
+// ----------Signals--------------------------------
+// graphic_changed
+// ----------Slots----------------------------------
+// update_image
 // --------------------------------------------------------------
 
 class WarpImage: public QObject
@@ -52,6 +59,7 @@ private:
 
    // timer & time
    QTimer      *image_update_timer;
+
    QTime       *warp_time;
 
 public:
@@ -92,7 +100,7 @@ signals:
 public slots:
 
    // update_image
-   void update_image();
+   void update_image(double value);
 };
 
 #endif // WARPIMAGE_H

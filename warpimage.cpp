@@ -2,8 +2,7 @@
 // WarpImage
 //
 // --------------------------------------------------------------------------------
-//    Aidan Orchard 02/02/2018
-// initial commit.
+//    Aidan Orchard
 // --------------------------------------------------------------------------------
 
 // supporting libraries
@@ -135,11 +134,12 @@ void WarpImage::effect_tunnel(double increment)
 // ---------------------------------------------------------------------
 
 // update_image
-void WarpImage::update_image()
+void WarpImage::update_image(double value)
 {
 
    // modify pixmap with painter
-   effect_tunnel(abs(qSin(warp_time->elapsed()/4000.0)));
+   //effect_tunnel(abs(qSin(warp_time->elapsed()/4000.0)));
+   effect_tunnel(value);
 
    // emit signal
    emit graphic_changed(piximage);
