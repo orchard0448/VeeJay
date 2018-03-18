@@ -1,19 +1,15 @@
 // --------------------------------------------------------------------------------
-// FunctionTimeSin
+// FunctionScalar
 //
 // Derived from AbstractFunction
 //
-// Returns sin(2*pi*frequency*t+2*pi*phase_offset) scaled from 0 to 1
-//
+// Returns a fixed constant between 0 and 1
 // --------------------------------------------------------------------------------
 //    Aidan Orchard
 // --------------------------------------------------------------------------------
 
 // class header file
-
-#include "functiontimesin.h"
-
-#include <QTime>
+#include "functionscalar.h"
 
 // --------------------------------------------------------------------------------
 //   ####   ####  #    #  ####  ##### #####  #    #  ####  #####  ####  #####   ####
@@ -24,15 +20,10 @@
 //   ####   ####  #    #  ####    #   #    #  ####   ####    #    ####  #    #  ####
 // --------------------------------------------------------------------------------
 
-// Default Constructor
-
-FunctionTimeSin::FunctionTimeSin(double f_, double phase_offset_, QObject *parent) : AbstractFunction(parent),
-frequency(f_),
-phase_offset(phase_offset_)
+FunctionScalar::FunctionScalar(double s_, QObject *parent) : AbstractFunction(parent),
+   scalar(s_)
 {
-   // start timer
-   time = new QTime();
-   time->start();
+   // do nothing
 }
 
 // ----------------------------------------------------------
@@ -45,8 +36,7 @@ phase_offset(phase_offset_)
 // ----------------------------------------------------------
 
 // f()
-double FunctionTimeSin::f() const
+double FunctionScalar::f() const
 {
-   return (qSin(time->elapsed()*0.0062831853*frequency+6.283185307*phase_offset)+1)/2;
+   return scalar;
 }
-

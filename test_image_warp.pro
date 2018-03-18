@@ -20,7 +20,8 @@ SOURCES += main.cpp \
     finalgraphic.cpp \
     graphicmixer.cpp \
     abstractfunction.cpp \
-    functiontimesin.cpp
+    functiontimesin.cpp \
+    functionscalar.cpp
 
 HEADERS += \
     controlpanel.h \
@@ -28,4 +29,5 @@ HEADERS += \
     finalgraphic.h \
     graphicmixer.h \
     abstractfunction.h \
-    functiontimesin.h
+    functiontimesin.h \
+    functionscalar.h

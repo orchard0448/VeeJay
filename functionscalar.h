@@ -1,23 +1,18 @@
 // --------------------------------------------------------------------------------
-// FunctionTimeSin
+// FunctionScalar
 //
 // Derived from AbstractFunction
 //
-// Returns sin(2*pi*frequency*t) scaled from 0 to 1
+// Returns a fixed constant between 0 and 1
 // --------------------------------------------------------------------------------
 //    Aidan Orchard
 // --------------------------------------------------------------------------------
 
-#ifndef FUNCTIONTIMESIN_H
-#define FUNCTIONTIMESIN_H
+#ifndef FUNCTIONSCALAR_H
+#define FUNCTIONSCALAR_H
 
 // include AbstractFunction base class
 #include <abstractfunction.h>
-
-// supporting libraries
-#include <QtMath>
-#include <QObject>
-#include <QTime>
 
 // --------------------------------------------------------------
 // FunctionTimeSin Class Declaration
@@ -32,26 +27,17 @@
 // ----------Slots----------------------------------
 // --------------------------------------------------------------
 
-class FunctionTimeSin : public AbstractFunction
+class FunctionScalar : public AbstractFunction
 {
    Q_OBJECT
-protected:
-
-   // main  timer
-   QTime    *time;
-
-   // frequency
-   double   frequency; // Hz
-
-   // phase offset (in terms of wavelengths)
-   double phase_offset; // cycles
-
 public:
 
-   // ----------Constructors------------------------------
+   // scalar value
+   double scalar;
 
-   // Default Constructor
-   FunctionTimeSin(double f_, double phase_offset, QObject *parent = nullptr);
+   //----------Constructors------------------------------
+
+   FunctionScalar(double s_, QObject *parent = nullptr);
 
    // ----------Getters--------------------------------
 
@@ -59,4 +45,4 @@ public:
    double f() const override;
 };
 
-#endif // FUNCTIONTIMESIN_H
+#endif // FUNCTIONSCALAR_H
