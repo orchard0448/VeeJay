@@ -19,6 +19,7 @@
 
 // predeclare classes and include Qt classes
 #include <QPainter>
+#include <functiontimesin.h>
 class QTimer;
 
 // --------------------------------------------------------------
@@ -44,8 +45,7 @@ class GraphicMixer : public QObject
 private:
 
    // Size
-   int   height   = 500;
-   int   width    = 1000;
+   QSize             imsize;
 
    // background color
    QColor            background_color = Qt::GlobalColor::white;
@@ -64,7 +64,7 @@ private:
    std::vector<QPixmap*>                     channel_pixmap_originals;
    std::vector<QPixmap*>                     channel_pixmap_postalpha;
    std::vector<QPixmap*>                     channel_alpha_gain_maps;
-   std::vector<int>                          channel_alpha;
+   std::vector<AbstractFunction*>            channel_alpha;
    std::vector<QPainter::CompositionMode>    comp_modes;
 
 public:
@@ -72,12 +72,13 @@ public:
    // ----------Constructors------------------------------
 
    // Default Constructor
-   explicit GraphicMixer(QObject *parent = nullptr);
+   explicit GraphicMixer(const QSize &imsize_, QObject *parent = nullptr);
 
    // ----------Mutators--------------------------------
 
    // add_channel
-   void add_channel(QPixmap *new_channel_pixmap, const QPainter::CompositionMode &mode, const int &alpha_gain);
+   void add_channel(QPixmap *new_channel_pixmap, const QPainter::CompositionMode &mode,
+                    AbstractFunction* alphafunction);
 
    // paint_alpha_gain_map
    void paint_alpha_gain_map(const int &channel_num);

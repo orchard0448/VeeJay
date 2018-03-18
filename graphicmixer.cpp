@@ -26,7 +26,9 @@
 // --------------------------------------------------------------------------------
 
 // Default Constructor
-GraphicMixer::GraphicMixer(QObject *parent) : QObject(parent)
+GraphicMixer::GraphicMixer(const QSize &imsize_, QObject *parent) :
+   imsize(imsize_),
+   QObject(parent)
 {
    // ------ Timer ------------------------------------
 
@@ -37,12 +39,12 @@ GraphicMixer::GraphicMixer(QObject *parent) : QObject(parent)
    QObject::connect(remix_timer, QTimer::timeout, this, GraphicMixer::remix);
 
    // start timer
-   remix_timer->start(1);
+   remix_timer->start(10);
 
    // ------ Graphic ------------------------------------
 
    // initialize pixmap
-   mixed_pixmap = new QPixmap(QSize(width, height));
+   mixed_pixmap = new QPixmap(imsize);
 
 }
 
@@ -56,7 +58,8 @@ GraphicMixer::GraphicMixer(QObject *parent) : QObject(parent)
 // ------------------------------------------------------------------
 
 // add_channel
-void GraphicMixer::add_channel(QPixmap *new_channel_pixmap, const QPainter::CompositionMode &mode, const int &alpha_gain)
+void GraphicMixer::add_channel(QPixmap *new_channel_pixmap, const QPainter::CompositionMode &mode,
+                               AbstractFunction* alphafunction)
 {
    // this function adds a channel to the mixer
    //    inputs:  reference to the pixmap for the channel
@@ -69,27 +72,28 @@ void GraphicMixer::add_channel(QPixmap *new_channel_pixmap, const QPainter::Comp
    comp_modes.push_back(mode);
 
    // create an alpha gain pixmap for this pixmap
-   channel_alpha_gain_maps.push_back(new QPixmap(width, height));
+   channel_alpha_gain_maps.push_back(new QPixmap(imsize));
 
    // create a post-alpha pixmap for channel
-   channel_pixmap_postalpha.push_back(new QPixmap(width, height));
+   channel_pixmap_postalpha.push_back(new QPixmap(imsize));
 
    // create alpha for this channel
-   //    default 255
-   channel_alpha.push_back(alpha_gain);
-
-   // paint alpha gain map
-   paint_alpha_gain_map(channel_alpha.size()-1);
+   channel_alpha.push_back(alphafunction);
 }
 
 // paint_alpha_gain_map
 void GraphicMixer::paint_alpha_gain_map(const int &channel_num)
 {
+
    // create a painter
    QPainter    painter(channel_alpha_gain_maps[channel_num]);
 
+   // change composition mode
+   painter.setCompositionMode(QPainter::CompositionMode_Source);
+
    // draw rectangle
-   painter.fillRect(0, 0, width, height, QBrush(QColor(0, 0, 0, channel_alpha[channel_num])));
+   painter.fillRect(0, 0, imsize.rwidth(), imsize.rheight(),
+                    QBrush(QColor(0, 0, 0, channel_alpha[channel_num]->f()*255)));
 
    // end paint
    painter.end();
@@ -99,18 +103,21 @@ void GraphicMixer::paint_alpha_gain_map(const int &channel_num)
 // paint_alpha_on_channel
 void GraphicMixer::paint_alpha_on_channel(const int &channel_num)
 {
+   // paint alpha gain map
+   paint_alpha_gain_map(channel_num);
+
    // begin painting
    alpha_painter = new QPainter();
    alpha_painter->begin(channel_pixmap_postalpha[channel_num]);
 
    // add original alpha
-   alpha_painter->drawPixmap(0,0,width,height, *channel_alpha_gain_maps[channel_num]);
+   alpha_painter->drawPixmap(0,0,imsize.rwidth(), imsize.rheight(), *channel_alpha_gain_maps[channel_num]);
 
    // change composition mode
    alpha_painter->setCompositionMode(QPainter::CompositionMode_SourceIn);
 
    // paint channel
-   alpha_painter->drawPixmap(0,0,width,height, *channel_pixmap_originals[channel_num]);
+   alpha_painter->drawPixmap(0,0,imsize.rwidth(), imsize.rheight(), *channel_pixmap_originals[channel_num]);
 
    // fin
    alpha_painter->end();
@@ -133,25 +140,30 @@ void GraphicMixer::remix()
    // mixing the composition entails creating a background and adding
    // each channel with the specified composition mode
 
+   // --- repaint each alpha channel
+   // loop through each channel
+   for(int ci = 0; ci < channel_pixmap_originals.size(); ci++)
+   {
+      // re-paint the alpha mixed channel
+      paint_alpha_on_channel(ci);
+   }
+
    // begin painting
    mix_painter = new QPainter();
 
    mix_painter->begin(mixed_pixmap);
 
    // add white
-   mix_painter->fillRect(0,0,width, height, background_color);
+   mix_painter->fillRect(0,0,imsize.rwidth(), imsize.rheight(), background_color);
 
    // loop through each channel
    for(int ci = 0; ci < channel_pixmap_originals.size(); ci++)
    {
-      // re-paint the alpha mixed channel
-      paint_alpha_on_channel(ci);
-
       // change composition mode
       mix_painter->setCompositionMode(comp_modes[ci]);
 
       // add channel 0
-      mix_painter->drawPixmap(0,0,width,height, *channel_pixmap_postalpha[ci]);
+      mix_painter->drawPixmap(0,0,imsize.rwidth(), imsize.rheight(), *channel_pixmap_postalpha[ci]);
    }
 
    mix_painter->end();
