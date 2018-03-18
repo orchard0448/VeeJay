@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
    QString  moon2    = QString("C:\\Users\\Aidan\\Downloads\\pexels-photo-673902.jpeg");
 
    // Size for image processing
-   QSize    imsize(1800, 1000);
+   QSize    imsize(1000, 500);
 
    // Create WarpImage
    WarpImage stationary_moon(moon2, imsize);
