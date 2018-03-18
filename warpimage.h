@@ -14,6 +14,7 @@
 #include <QTime>
 
 #include <abstractfunction.h>
+#include <functionscalar.h>
 
 class QPixmap;
 
@@ -23,15 +24,14 @@ class QPixmap;
 // functions:
 // ----------Constructors------------------------------
 // Default Constructor
-// ----------Accessors--------------------------------
+// ----------Accessors------------------------------
 // get_pixmap
-// ----------Mutators--------------------------------
-// set_max_rel_width
-// set_max_rel_height
-// set_qtime
-// tunnel effect
-// ----------Signals--------------------------------
-// graphic_changed
+// ----------Setters--------------------------------
+// set_vert_bord1
+// set_vert_bord2
+// set_horz_bord1
+// set_horz_bord2
+// effect_warp
 // ----------Slots----------------------------------
 // update_image
 // --------------------------------------------------------------
@@ -43,17 +43,15 @@ class WarpImage: public QObject
 private:
 
    // Size
-   int   height   = 500;
-   int   width    = 1000;
+   QSize       imsize;
 
-   // max warp width and height
-   double   max_relative_width    = 0.9;
-   double   max_relative_height   = 0.8;
+   // input image path
+   QString     input_image_path;
 
-   // image path
-   QString     base_image_path   = QString("C:\\Users\\Aidan\\Desktop\\krug.jpg");
+   // original image pixmap
+   QPixmap     *origpix;
 
-   // image
+   // manipulated image
    QPixmap     *piximage;
 
    // paint device
@@ -62,41 +60,45 @@ private:
    // update timer
    QTimer      *image_update_timer;
 
-   // warp_scalar
-   AbstractFunction  *warp_scalar;
+   // borders
+   //    relative to width and height
+   AbstractFunction *vert_rel_bord1   = new FunctionScalar(0);
+   AbstractFunction *vert_rel_bord2   = new FunctionScalar(1);
+   AbstractFunction *horz_rel_bord1   = new FunctionScalar(0);
+   AbstractFunction *horz_rel_bord2   = new FunctionScalar(1);
 
 public:
 
    // ----------Constructors------------------------------
 
    // Default Constructor
-   WarpImage(QObject *parent = nullptr);
+   WarpImage(const QString &image_path_, const QSize &imsize_, QObject *parent = nullptr);
 
    // ----------Accessors--------------------------------
 
    // get_pixmap
    QPixmap* get_pixmap();
 
-   // ----------Mutators--------------------------------
+   // ----------Setters--------------------------------
 
-   // set_warp_scalar
-   void set_warp_scalar(AbstractFunction *abstract_function);
+   // set_vert_bord1
+   void set_vert_bord1(AbstractFunction *func);
 
-   // set_max_rel_width
-   void set_max_rel_width(double m_rel_w);
+   // set_vert_bord2
+   void set_vert_bord2(AbstractFunction *func);
 
-   // set_max_rel_height
-   void set_max_rel_height(double m_rel_h);
+   // set_horz_bord1
+   void set_horz_bord1(AbstractFunction *func);
 
-   // tunnel effect
-   void effect_tunnel(double value);
+   // set_horz_bord2
+   void set_horz_bord2(AbstractFunction *func);
+
+   // effect_warp
+   void effect_warp();
 
    // ----------Signals--------------------------------
 
 signals:
-
-   // graphic_changed
-   void graphic_changed(QPixmap *pixmap);
 
    // ----------Slots----------------------------------
 

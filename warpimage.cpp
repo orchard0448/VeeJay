@@ -28,7 +28,10 @@ using namespace std;
 // --------------------------------------------------------------------------------
 
 // Default Constructor
-WarpImage::WarpImage(QObject *parent) : QObject(parent)
+WarpImage::WarpImage(const QString &image_path_, const QSize &imsize_, QObject *parent) :
+   input_image_path(image_path_),
+   imsize(imsize_),
+   QObject(parent)
 {
    // ------ Timer ------------------------------------
 
@@ -39,26 +42,24 @@ WarpImage::WarpImage(QObject *parent) : QObject(parent)
    QObject::connect(image_update_timer, QTimer::timeout, this, WarpImage::update_image);
 
    // start timer
-   image_update_timer->start(1);
-
-   // ------ Warp Scalar ------------------------------
-
-   // default: sin function
-   warp_scalar = new FunctionTimeSin();
+   image_update_timer->start(5);
 
    // ------ Graphic ------------------------------------
 
    // pull image
    QImage image;
-   image = QImage( base_image_path );
+   image = QImage( input_image_path );
 
    // scale image
-   image = image.scaledToWidth(width);
+   image = image.scaledToWidth(imsize.rwidth());
 
-   // convert ot piximap
+   // convert to piximap
    piximage    = new QPixmap();
    piximage->convertFromImage(image);
-   *piximage   = piximage->copy(QRect(0,0,width,height));
+   *piximage   = piximage->copy(QRect(0,0,imsize.rwidth(), imsize.rheight()));
+
+   // pull out base image
+   origpix  = new QPixmap(*piximage);
 }
 
 // ------------------------------------------------------------------
@@ -85,35 +86,52 @@ QPixmap* WarpImage::get_pixmap()
 //  #    #  ####    #   #    #   #    ####  #    #  ####
 // ------------------------------------------------------------------
 
-// set_warp_scalar
-void WarpImage::set_warp_scalar(AbstractFunction *abstract_function)
+// set_vert_bord1
+void WarpImage::set_vert_bord1(AbstractFunction *func)
 {
-   warp_scalar = abstract_function;
+   vert_rel_bord1    = func;
 }
 
-// set_max_rel_width
-void WarpImage::set_max_rel_width(double m_rel_w)
+// set_vert_bord2
+void WarpImage::set_vert_bord2(AbstractFunction *func)
 {
-   max_relative_width   = m_rel_w;
+   vert_rel_bord2    = func;
 }
 
-// set_max_rel_height
-void WarpImage::set_max_rel_height(double m_rel_h)
+// set_horz_bord1
+void WarpImage::set_horz_bord1(AbstractFunction *func)
 {
-   max_relative_height   = m_rel_h;
+   horz_rel_bord1    = func;
 }
 
-// effect_tunnel
-void WarpImage::effect_tunnel(double increment)
+// set_horz_bord2
+void WarpImage::set_horz_bord2(AbstractFunction *func)
 {
-   int rect_width    = increment*width*max_relative_width;
-   int rect_height   = increment*height*max_relative_height;
+   horz_rel_bord2    = func;
+}
 
-   // calc left border based on width for centering
-   //int left_border   = (width - rect_width)/2;
-   int left_border   = 100; //width/8 - max_relative_height/2;
-   //int top_border    = (height - rect_height)/2;
-   int top_border    = 50; //height/4 - max_relative_height/2; ;
+// effect_warp
+void WarpImage::effect_warp()
+{
+
+   // calculate rectangle
+   //    defined in Rect by starting location and size
+
+   // define borders in terms of border1 and border2
+   int horz_bord1   = horz_rel_bord1->f()*imsize.rheight();
+   int horz_bord2   = horz_rel_bord2->f()*imsize.rheight();
+   int vert_bord1   = vert_rel_bord1->f()*imsize.rwidth();
+   int vert_bord2   = vert_rel_bord2->f()*imsize.rwidth();
+
+   // find width and height of rect
+   int rect_height   = qAbs(horz_bord1 - horz_bord2);
+   int rect_width    = qAbs(vert_bord1 - vert_bord2);
+
+   // determine starting point for rect
+   int rect_x0       = min(vert_bord1, vert_bord2);
+   int rect_y0       = min(horz_bord1, horz_bord2);
+
+   // ----- Initialize Painter
 
    // reset painter
    painter = new QPainter();
@@ -122,7 +140,8 @@ void WarpImage::effect_tunnel(double increment)
    painter->begin(piximage);
 
    // draw pixmap
-   painter->drawPixmap( QRect(left_border,top_border,rect_width,rect_height), *piximage, QRect(0,0,width,height));
+   painter->drawPixmap( QRect(rect_x0,rect_y0,rect_width,rect_height), *origpix,
+                        QRect(0,0,imsize.rwidth(),imsize.rheight()));
 
    // end painting
    painter->end();
@@ -141,14 +160,8 @@ void WarpImage::effect_tunnel(double increment)
 // update_image
 void WarpImage::update_image()
 {
-
    // modify pixmap with painter
-   //effect_tunnel(abs(qSin(warp_time->elapsed()/4000.0)));
-   effect_tunnel(warp_scalar->f());
-
-   // emit signal
-   emit graphic_changed(piximage);
-
+   effect_warp();
 }
 
 
