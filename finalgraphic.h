@@ -41,6 +41,10 @@ class FinalGraphic : public QWidget
    Q_OBJECT
 
 private:
+
+   // Size
+   QSize       imsize;
+
    // image
    QLabel      *labelimage;
 
@@ -49,7 +53,7 @@ public:
    // ----------Constructors---------------------
 
    // default constructor
-   explicit FinalGraphic(QWidget *parent = nullptr);
+   explicit FinalGraphic(const QSize &imsize_, QWidget *parent = nullptr);
 
    // ----------Signals--------------------------------
 

@@ -44,7 +44,7 @@ WarpImage::WarpImage(const QString &image_path_, const QSize &imsize_, QObject *
    // start timer
    image_update_timer->start(5);
 
-   // ------ Graphic ------------------------------------
+   // ------ Path to Scaled Pixmap  ------------------------------------
 
    // pull image
    QImage image;
@@ -54,12 +54,13 @@ WarpImage::WarpImage(const QString &image_path_, const QSize &imsize_, QObject *
    image = image.scaledToWidth(imsize.rwidth());
 
    // convert to piximap
-   piximage    = new QPixmap();
-   piximage->convertFromImage(image);
-   *piximage   = piximage->copy(QRect(0,0,imsize.rwidth(), imsize.rheight()));
+   pixmap_scaled    = new QPixmap();
+   pixmap_scaled->convertFromImage(image);
+   *pixmap_scaled   = pixmap_scaled->copy(QRect(0,0,imsize.rwidth(), imsize.rheight()));
 
-   // pull out base image
-   origpix  = new QPixmap(*piximage);
+   // ------ Initialize Warped Pixmap  ------------------------------------
+
+   pixmap_warped  = new QPixmap(*pixmap_scaled);
 }
 
 // ------------------------------------------------------------------
@@ -71,10 +72,10 @@ WarpImage::WarpImage(const QString &image_path_, const QSize &imsize_, QObject *
 //  #    #  ####   ####  ######  ####   ####   ####  #    #  ####
 // ------------------------------------------------------------------
 
-// get_pixmap
-QPixmap* WarpImage::get_pixmap()
+// get_warped_pixmap
+QPixmap* WarpImage::get_warped_pixmap()
 {
-   return piximage;
+   return pixmap_warped;
 }
 
 // ------------------------------------------------------------------
@@ -137,10 +138,10 @@ void WarpImage::effect_warp()
    painter = new QPainter();
 
    // start painting
-   painter->begin(piximage);
+   painter->begin(pixmap_warped);
 
    // draw pixmap
-   painter->drawPixmap( QRect(rect_x0,rect_y0,rect_width,rect_height), *origpix,
+   painter->drawPixmap( QRect(rect_x0,rect_y0,rect_width,rect_height), *pixmap_scaled,
                         QRect(0,0,imsize.rwidth(),imsize.rheight()));
 
    // end painting

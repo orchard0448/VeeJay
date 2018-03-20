@@ -1,80 +1,115 @@
 #include <QApplication>
 #include <QWidget>
 
+#include <string>
+using namespace std;
+
 #include <controlpanel.h>
 #include <warpimage.h>
 #include <finalgraphic.h>
 #include <graphicmixer.h>
 #include <functiontimesin.h>
+#include <staticpixmap.h>
 
 int main(int argc, char *argv[])
 {
    // main application
    QApplication a(argc, argv);
 
+   // --------------------------------------------------------------------------------
+   // Paths & Directories
+   // --------------------------------------------------------------------------------
+
+   // Image Directory
+   QString   dir_image   = "B:\\Pictures\\animation\\yuri_animations\\images\\";
+
    // Image Paths
-   QString  krug   = QString("C:\\Users\\Aidan\\Desktop\\krug.jpg");
-   QString  stars1    = QString("C:\\Users\\Aidan\\Downloads\\pexels-photo-134074.jpeg");
-   QString  stars2    = QString("C:\\Users\\Aidan\\Downloads\\pexels-photo-207529.jpeg");
-   QString  sun1    = QString("C:\\Users\\Aidan\\Downloads\\sun-fireball-solar-flare-sunlight-87611.jpeg");
-   QString  sun2    = QString("C:\\Users\\Aidan\\Downloads\\solar-flare-sun-eruption-energy-39561.jpeg");
-   QString  moon1    = QString("C:\\Users\\Aidan\\Downloads\\pexels-photo-459475.jpeg");
-   QString  moon2    = QString("C:\\Users\\Aidan\\Downloads\\pexels-photo-673902.jpeg");
+   QString  path_stars1         = QString(dir_image + "stars1.jpeg");
+   QString  path_stars2         = QString(dir_image + "stars2.jpeg");
+   QString  path_sun_orange     = QString(dir_image + "sun_orange.jpeg");
+   QString  path_sun_purple     = QString(dir_image + "sun_purple.jpeg");
+   QString  path_moon_full      = QString(dir_image + "moon_full.jpeg");
+   QString  path_sun_cutout     = QString(dir_image + "sun_cutout.png");
+
+   // logo paths
+   QString  path_yuri_whole     = QString(dir_image + "yuri_logo.png");
+   QString  path_yuri_red       = QString(dir_image + "yuri_logo_red.png");
+   QString  path_yuri_bw        = QString(dir_image + "yuri_logo_bw.png");
+
+   // --------------------------------------------------------------------------------
+   // Constants / Inputs
+   // --------------------------------------------------------------------------------
 
    // Size for image processing
-   QSize    imsize(1000, 500);
-
-   // Create WarpImage
-   WarpImage stationary_moon(moon2, imsize);
-   WarpImage warp2(stars2, imsize);
-   WarpImage warp3(stars1, imsize);
+   QSize    imsize(1000, 600);
+   QSize    finsize  = imsize;
 
    // create sin waves
-   AbstractFunction *sin1   = new FunctionTimeSin(0.1, 0);
-   AbstractFunction *sin2   = new FunctionTimeSin(0.1, 0.25);
-   AbstractFunction *sin3   = new FunctionTimeSin(0.1, 0.5);
-   AbstractFunction *sin4   = new FunctionTimeSin(0.1, 0.75);
+   double frequency_main   = 0.10;
+   AbstractFunction *sin0   = new FunctionTimeSin(frequency_main, 0);
+   AbstractFunction *sin1   = new FunctionTimeSin(frequency_main, 0.25);
+   AbstractFunction *sin2   = new FunctionTimeSin(frequency_main, 0.5);
+   AbstractFunction *sin3   = new FunctionTimeSin(frequency_main, 0.75);
 
-   stationary_moon.set_vert_bord1(new FunctionScalar(0));
-   stationary_moon.set_vert_bord2(new FunctionScalar(0));
-   stationary_moon.set_horz_bord1(sin3);
-   stationary_moon.set_horz_bord2(sin2);
+   // --------------------------------------------------------------------------------
+   // Static Images
+   // --------------------------------------------------------------------------------
 
-   warp2.set_vert_bord1(sin2);
-   warp2.set_vert_bord2(sin4);
-   warp2.set_horz_bord1(sin4);
-   warp2.set_horz_bord2(sin3);
+   // Moon
+   StaticPixmap static_moon(path_moon_full, imsize);
 
-   warp3.set_vert_bord1(sin3);
-   warp3.set_vert_bord2(sin1);
-   warp3.set_horz_bord1(sin1);
-   warp3.set_horz_bord2(sin4);
+   // stars
+   StaticPixmap static_stars(path_stars2, imsize);
 
-   // Create FinalGaphic
-   FinalGraphic final;
-   final.show();
+   // yuris
+   StaticPixmap yuri_whole(path_yuri_whole, imsize);
+   StaticPixmap yuri_red(path_yuri_red, imsize);
+   StaticPixmap yuri_bw(path_yuri_bw, imsize);
+
+   // sun
+   StaticPixmap static_sun_cutout(path_sun_cutout, imsize);
+
+   // --------------------------------------------------------------------------------
+   // Warp Images
+   // --------------------------------------------------------------------------------
+
+   // Images for Warping
+   WarpImage stars1(path_stars1, imsize);
+   WarpImage stars2(path_stars2, imsize);
+
+   stars1.set_vert_bord1(sin1);
+   stars1.set_vert_bord2(sin3);
+   stars1.set_horz_bord1(sin3);
+   stars1.set_horz_bord2(sin2);
+
+   stars2.set_vert_bord1(sin2);
+   stars2.set_vert_bord2(sin0);
+   stars2.set_horz_bord1(sin0);
+   stars2.set_horz_bord2(sin3);
+
+   // --------------------------------------------------------------------------------
+   // Mixer
+   // --------------------------------------------------------------------------------
 
    // Create Graphic Mixer
    GraphicMixer mixer(imsize);
 
    // add warp1's pixmap to mixer
-   mixer.add_channel(stationary_moon.get_pixmap(), QPainter::CompositionMode_SourceAtop , sin3);
-   mixer.add_channel(warp2.get_pixmap(), QPainter::CompositionMode_Difference , sin2);
-   mixer.add_channel(warp3.get_pixmap(), QPainter::CompositionMode_Difference , sin1);
 
+   mixer.add_channel(static_stars.get_scaled_pixmap(), QPainter::CompositionMode_SourceAtop , sin3);
+   mixer.add_channel(static_sun_cutout.get_scaled_pixmap(), QPainter::CompositionMode_Plus , new FunctionScalar(1));
+
+   mixer.add_channel(stars1.get_warped_pixmap(), QPainter::CompositionMode_Difference , sin2);
+   //mixer.add_channel(stars2.get_warped_pixmap(), QPainter::CompositionMode_Difference , sin3);
+   mixer.add_channel(yuri_bw.get_scaled_pixmap(), QPainter::CompositionMode_Difference , new FunctionScalar(1));
+   //mixer.add_channel(yuri_red.get_scaled_pixmap(), QPainter::CompositionMode_SourceAtop , sin3);
+
+   // Create FinalGaphic
+   FinalGraphic final(finsize);
+   final.show();
 
    // Connect graphic mixer to final image
    QObject::connect(&mixer, GraphicMixer::graphic_remixed, &final, FinalGraphic::update);
-
-   // connect warpimage to graphic mixer
-   //QObject::connect(&warp1, WarpImage::graphic_changed, &mixer, GraphicMixer::update_channel);
-
-   // Create Control Panel
-   //ControlPanel controls;
-   //controls.show();
-
-   // conenct control slider to warp image slot
-   //QObject::connect(&controls, &ControlPanel::slider1Changed, &main_image, WarpImage::test_slot);
 
    return a.exec();
 }

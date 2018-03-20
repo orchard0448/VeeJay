@@ -17,9 +17,10 @@
 #include <functionscalar.h>
 
 class QPixmap;
+class QSize;
 
 // --------------------------------------------------------------
-// ControlPanel Class Declaration
+// WarpImage Class Declaration
 // --------------------------------------------------------------
 // functions:
 // ----------Constructors------------------------------
@@ -40,7 +41,7 @@ class WarpImage: public QObject
 {
    Q_OBJECT
 
-private:
+protected:
 
    // Size
    QSize       imsize;
@@ -48,11 +49,11 @@ private:
    // input image path
    QString     input_image_path;
 
-   // original image pixmap
-   QPixmap     *origpix;
+   // original scaled image pixmap
+   QPixmap     *pixmap_scaled;
 
    // manipulated image
-   QPixmap     *piximage;
+   QPixmap     *pixmap_warped;
 
    // paint device
    QPainter    *painter;
@@ -76,8 +77,8 @@ public:
 
    // ----------Accessors--------------------------------
 
-   // get_pixmap
-   QPixmap* get_pixmap();
+   // get_warped_pixmap
+   QPixmap* get_warped_pixmap();
 
    // ----------Setters--------------------------------
 

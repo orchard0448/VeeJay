@@ -1,21 +1,25 @@
 // --------------------------------------------------------------------------------
-// FunctionScalar
+// FunctionMidi
 //
 // Derived from AbstractFunction
+//
+// For compatability with other AbstractFunction plugins, instantiate objects
+// dynamically
+//
+// AbstractFunction *midi_control1 = new FunctionMidi()
+//
+// manipulate double midi_value stored in class to change midi value.
 //
 // Returns a fixed constant between 0 and 1
 // --------------------------------------------------------------------------------
 //    Aidan Orchard
 // --------------------------------------------------------------------------------
 
-#ifndef FUNCTIONSCALAR_H
-#define FUNCTIONSCALAR_H
-
-// include AbstractFunction base class
-#include <abstractfunction.h>
+#ifndef FUNCTIONMIDI_H
+#define FUNCTIONMIDI_H
 
 // --------------------------------------------------------------
-// FunctionTimeSin Class Declaration
+// FunctionMidi Class Declaration
 // --------------------------------------------------------------
 // functions:
 // ----------Constructors------------------------------
@@ -24,7 +28,7 @@
 // f()
 // --------------------------------------------------------------
 
-class FunctionScalar : public AbstractFunction
+class FunctionMidi: public AbstractFunction
 {
    Q_OBJECT
 public:
@@ -34,7 +38,7 @@ public:
 
    //----------Constructors------------------------------
 
-   FunctionScalar(double s_, QObject *parent = nullptr);
+   FunctionMidi(QObject *parent = nullptr);
 
    // ----------Getters--------------------------------
 
@@ -42,4 +46,4 @@ public:
    double f() const override;
 };
 
-#endif // FUNCTIONSCALAR_H
+#endif // FUNCTIONMIDI_H

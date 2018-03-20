@@ -21,7 +21,9 @@ SOURCES += main.cpp \
     graphicmixer.cpp \
     abstractfunction.cpp \
     functiontimesin.cpp \
-    functionscalar.cpp
+    functionscalar.cpp \
+    staticpixmap.cpp \
+    functionmidi.cpp
 
 HEADERS += \
     controlpanel.h \
@@ -30,4 +32,6 @@ HEADERS += \
     graphicmixer.h \
     abstractfunction.h \
     functiontimesin.h \
-    functionscalar.h
+    functionscalar.h \
+    staticpixmap.h \
+    functionmidi.h

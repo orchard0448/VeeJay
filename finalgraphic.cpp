@@ -26,17 +26,20 @@
 
 
 // Default Constructor
-FinalGraphic::FinalGraphic(QWidget *parent) : QWidget(parent)
+FinalGraphic::FinalGraphic(const QSize &imsize_, QWidget *parent) :
+   QWidget(parent),
+   imsize(imsize_)
 {
    // Size
-   resize(QSize(1000,500));
+   resize(imsize);
 
    // create label
    labelimage  = new QLabel(this);
 
-   QImage ugh("C:\\Users\\Aidan\\Desktop\\krug.jpg");
-
-   labelimage->setPixmap( (QPixmap::fromImage(ugh).scaledToWidth(1000)) );
+   // create pixmap of size
+   QPixmap  temp_pixmap(imsize);
+   temp_pixmap.fill(QColor(Qt::GlobalColor::white));
+   labelimage->setPixmap(temp_pixmap);
    labelimage->setAlignment(Qt::AlignTop);
 
 }
