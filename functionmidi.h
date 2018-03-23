@@ -18,6 +18,9 @@
 #ifndef FUNCTIONMIDI_H
 #define FUNCTIONMIDI_H
 
+// include AbstractFunction base class
+#include <abstractfunction.h>
+
 // --------------------------------------------------------------
 // FunctionMidi Class Declaration
 // --------------------------------------------------------------
@@ -28,7 +31,7 @@
 // f()
 // --------------------------------------------------------------
 
-class FunctionMidi: public AbstractFunction
+class FunctionMidi : public AbstractFunction
 {
    Q_OBJECT
 public:

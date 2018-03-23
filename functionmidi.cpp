@@ -26,7 +26,7 @@
 //   ####   ####  #    #  ####    #   #    #  ####   ####    #    ####  #    #  ####
 // --------------------------------------------------------------------------------
 
-FunctionMidi::FunctionMidi(QObject *parent) : AbstractFunction(parent),
+FunctionMidi::FunctionMidi(QObject *parent) : AbstractFunction(parent)
 {
 
 }
