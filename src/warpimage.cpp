@@ -12,7 +12,7 @@
 #include "warpimage.h"
 
 // supported libs
-#include "functiontimesin.h"
+//#include "functiontimesin.h"
 
 // std
 #include <iostream>
@@ -54,13 +54,13 @@ WarpImage::WarpImage(const QString &image_path_, const QSize &imsize_, QObject *
    image = image.scaledToWidth(imsize.rwidth());
 
    // convert to piximap
-   pixmap_scaled    = new QPixmap();
-   pixmap_scaled->convertFromImage(image);
-   *pixmap_scaled   = pixmap_scaled->copy(QRect(0,0,imsize.rwidth(), imsize.rheight()));
+   //pixmap_scaled    = new QPixmap();
+   //pixmap_scaled->convertFromImage(image);
+   //*pixmap_scaled   = pixmap_scaled->copy(QRect(0,0,imsize.rwidth(), imsize.rheight()));
 
    // ------ Initialize Warped Pixmap  ------------------------------------
 
-   pixmap_warped  = new QPixmap(*pixmap_scaled);
+   //pixmap_warped  = new QPixmap(*pixmap_scaled);
 }
 
 // ------------------------------------------------------------------

@@ -15,6 +15,8 @@
 //    Aidan Orchard
 // --------------------------------------------------------------------------------
 
+#include <abstractfunction.h>
+
 #ifndef FUNCTIONMIDI_H
 #define FUNCTIONMIDI_H
 
@@ -33,8 +35,15 @@ class FunctionMidi: public AbstractFunction
    Q_OBJECT
 public:
 
-   // scalar value
-   double midi_value;
+    // scalar value
+    double midi_value;
+
+    void midiVal(double value)
+    {midi_value = value;}
+
+    double midiVal(void)
+    {return midi_value;}
+
 
    //----------Constructors------------------------------
 
@@ -44,6 +53,8 @@ public:
 
    // f()
    double f() const override;
+
 };
+
 
 #endif // FUNCTIONMIDI_H
