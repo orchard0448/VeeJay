@@ -54,7 +54,6 @@ public:
 
    // f()
    virtual double f() const = 0;
-
 };
 
 #endif // ABSTRACTFUNCTION_H

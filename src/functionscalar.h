@@ -30,7 +30,7 @@ class FunctionScalar : public AbstractFunction
 public:
 
    // scalar value
-   double midi_value;
+   double scalar;
 
    //----------Constructors------------------------------
 

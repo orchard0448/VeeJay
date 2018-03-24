@@ -20,7 +20,8 @@
 //   ####   ####  #    #  ####    #   #    #  ####   ####    #    ####  #    #  ####
 // --------------------------------------------------------------------------------
 
-FunctionScalar::FunctionScalar(double s_, QObject *parent) : AbstractFunction(parent)
+FunctionScalar::FunctionScalar(double s_, QObject *parent) : AbstractFunction(parent),
+   scalar(s_)
 {
    // do nothing
 }
@@ -37,6 +38,5 @@ FunctionScalar::FunctionScalar(double s_, QObject *parent) : AbstractFunction(pa
 // f()
 double FunctionScalar::f() const
 {
-   return 0;
-   //return scalar;
+   return scalar;
 }
